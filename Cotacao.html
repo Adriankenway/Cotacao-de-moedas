@@ -1,0 +1,30 @@
+<html lang="utf-8">
+	<head>
+		<meta charset="utf-8"/>
+	</head>
+	<body>
+		<script>
+			 function httpGet(theUrl){
+  			  var xmlHttp = new XMLHttpRequest();
+  			  xmlHttp.open( "GET", theUrl, false ); 
+  			  xmlHttp.send( null );
+		    return xmlHttp.responseText;
+}
+
+			 var jsontext = httpGet(" https://api.promasters.net.br/cotacao/v1/valores");
+			 var contact = JSON.parse(jsontext);
+			 var valores = contact;
+			 var status = (valores.status);
+			 document.write(valores.status + valores.valores.USD.valor)
+			 if (status == "true") {
+			 	document.write("tudo ok")
+			 }
+			 else if (status == "false") {
+			 	document.write("erro na requisição")
+			 }
+		</script>
+		<div> 
+			
+		</div>
+	</body>
+</html>
