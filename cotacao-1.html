@@ -1,0 +1,156 @@
+<html lang="pt-br">
+<head>
+	<meta charset="utf-8"/>
+	<style>
+		div#moedas {
+			background-color:#76F989;
+			positipn:relative;
+			width:800px;
+			margin:200px auto 0px auto;
+			height:500px;
+			box-shadow:2px 2px 4px black;
+			padding:10px;
+		}
+		
+		div#moedas p{
+			color:black;
+			text-shadow:1px 1px 3px  black;
+			font-size:20pt;
+			text-align:right;
+			background-color:#DCFF9B;
+			padding:2px;
+			box-shadow:2px 2px 4px  black;
+		}
+		
+		body {
+			background-color:#55DBC3;
+			
+		}
+		
+		header h1 {
+			text-align:center;
+			border-bottom:1px dashed black;
+			margin-top:-10;
+			margin-bottom:50px;
+			font-size:30pt;
+		}
+		
+		div#moedas p#moedas{
+			color:black;
+			text-shadow:1px 1px 3px  black;
+			font-size:20pt;
+			text-align:left;
+			background-color:#DCFF9B;
+			padding:2px;
+			margin-bottom:-15px;
+			}
+		h2 {
+			text-align:center;
+			background-color:#24C1CB;
+			padding:10px;
+			margin-top:40px;
+			box-shadow:2px 2px 5px black;
+		}
+		 
+		 
+		header#cabecalho p {
+			background-color:#24C1CB;
+			width:100px;
+			position: absolute;
+			left: 970px;
+			top:180px;
+			font-size: 20pt;
+		}
+	</style>
+</head>
+<body>
+<div id="moedas">
+	<header id="cabecalho">
+		<h1 id="titulo"> Cotações </h1>
+	</header>
+<script>
+	//função retorna o texto da requisição
+function httpGet(theUrl){
+  			  var xmlHttp = new XMLHttpRequest();
+  			  xmlHttp.open( "GET", theUrl, false ); 
+  			  xmlHttp.send( null );
+		      return xmlHttp.responseText;
+}
+//pega o valor das moedas(dolar,euro,bitcoin)
+function moedas(){
+			 var jsontext = httpGet(" https://api.promasters.net.br/cotacao/v1/valores");
+			 var contact = JSON.parse(jsontext);
+			 var valores = contact;
+			 var status = valores.status;
+			 var dolar = valores.valores.USD.valor;
+			 var  euro = valores.valores.EUR.valor;
+			 var btc = valores.valores.BTC.valor;
+			 var status = valores.status;
+			 var listaDeValores = [dolar,euro,btc,status];
+			 return listaDeValores;
+			 
+}
+//Adiciona os valores a interface html
+var valores = {
+	listaDeMoedas: moedas(),
+}
+var dolar = valores.listaDeMoedas[0];
+var euro = valores.listaDeMoedas[1];
+var btc = valores.listaDeMoedas[2];
+var status =valores.listaDeMoedas[3];
+if (status == "true") {
+	//cria elemento dolar no html
+	var tituloDolar = document.createElement("p")
+	tituloDolar.innerHTML = "Dolar: &#36;"
+	tituloDolar.setAttribute("id","moedas")
+	document.getElementById("moedas").appendChild(tituloDolar)
+	var elementDolar = document.createElement("p")
+	elementDolar.innerHTML = dolar
+	document.getElementById("moedas").appendChild(elementDolar);
+	//cria elemento euro no html
+	var tituloEuro = document.createElement("p")
+	tituloEuro.innerHTML = "Euro: &#128;"
+	tituloEuro.setAttribute("id","moedas")
+	document.getElementById("moedas").appendChild(tituloEuro)
+	// cria um paragrafo com o valof
+	var elementEuro = document.createElement("p")
+	elementEuro.innerHTML = euro
+	document.getElementById("moedas").appendChild(elementEuro);
+	//cria elemento btc no html
+	var tituloBtc = document.createElement("p")
+	tituloBtc.innerHTML = "BTC:"
+	tituloBtc.setAttribute("id","moedas")
+	document.getElementById("moedas").appendChild(tituloBtc)
+	//cria um paragrafo com o valor
+	var elementBtc = document.createElement("p")
+	elementBtc.innerHTML = btc
+	document.getElementById("moedas").appendChild(elementBtc);
+	
+}else if (status == "false"){
+	document.write("Erro na requisição");
+}
+
+function atualizar(){
+	window.location.reload()
+}
+function hora() {
+	var data = new Date ;
+	var horas = data.getHours();
+	var minutos = data.getMinutes();
+	var segundos = data.getSeconds();
+	var saidaHora = document.createElement("p");
+	saidaHora.innerHTML = horas + ":" + minutos + ":" + segundos;
+	saidaHora.setAttribute("id","hora");
+	document.getElementById("titulo").appendChild(saidaHora);
+	return saidaHora;
+}
+
+hora();
+
+//setInterval(atualizar,10000);
+
+</script>
+<h2 onclick="atualizar()"> Atualizar </h2>
+</div>
+</body>
+</html>
