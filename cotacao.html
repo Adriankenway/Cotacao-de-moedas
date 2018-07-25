@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Cotacao 2.0</title>
+  </head>
+  <body>
+    <div id="container-fluid">
+      <div id="row">
+        <div id="app">
+          <table class="table table-dark table-bordered table-hover">
+            <tr>
+              <th>Moeda</th>
+              <th>Valor</th>
+              <th>Ultima Consulta</th>
+            </tr>
+            <tr>
+              <td>Dolar</td><td>{{dolar}}</td><td>{{Cdolar}}</td>
+            </tr>
+            <tr>
+              <td>Euro:</td><td>{{euro}}</td><td>{{Ceuro}}</td>
+            </tr>
+            <tr>
+              <td>Bitcoin:</td><td>{{bitcoin}}</td><td>{{Cbitcoin}}</td>
+            </tr>
+            <tr>
+              <td>Peso Argentino:</td><td>{{ars}}</td><td>{{Cpeso_argentino}}</td>
+            </tr>
+            <tr>
+              <td>Libra esterlina</td><td>{{gbp}}</td><td>{{Clibra_esterlina}}</td>
+            </tr>
+          </table>
+        </div><!--App-->
+      </div><!--Linha-->
+  </div><!--Container-->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script type="text/javascript">
+      function httpGet(theUrl){
+              var xmlHttp = new XMLHttpRequest();
+              xmlHttp.open( "GET", theUrl, false ); 
+              xmlHttp.send( null );
+            return xmlHttp.responseText;
+      }
+           var jsontext = httpGet(" https://api.promasters.net.br/cotacao/v1/valores");
+           var contact = JSON.parse(jsontext);
+           var valores = contact;
+           var status = (valores.status);
+           function ultima_consulta(tempo){
+             var date = new Date(tempo*1000); // converte para data
+             var dado = date.toLocaleDateString("pt-BR"); //formata de acordo com o requisito
+             return dado;
+          }  
+      var moedas = {
+          dolar:contact.valores.USD.valor,
+          euro:contact.valores.EUR.valor,
+          bitcoin:contact.valores.BTC.valor,
+          ars:contact.valores.ARS.valor,
+          gbp:contact.valores.GBP.valor,
+          Cdolar:ultima_consulta(contact.valores.USD.ultima_consulta),
+          Ceuro:ultima_consulta(contact.valores.EUR.ultima_consulta),
+          Cbitcoin:ultima_consulta(contact.valores.BTC.ultima_consulta),
+          Cpeso_argentino:ultima_consulta(contact.valores.ARS.ultima_consulta),
+          Clibra_esterlina:ultima_consulta(contact.valores.GBP.ultima_consulta)
+      }
+      var app = new Vue({
+        el:"#app",
+        data:moedas
+      }) 
+   </script>
+  </body>
+</html>
