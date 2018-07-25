@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Teste vue</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="utf-8">
+</head>
+<body>
+<div id="container-fluid">
+<div id="app">
+<div class="row col-md-12">
+  <table class="table table-dark table-bordered table-hover">
+    <tr>
+      <th>Moeda</th>
+      <th>Valor</th>
+      <th>Ultima Consulta</th>
+    </tr>
+    <tr>
+      <td>Dolar</td><td>{{dolar}}</td><td>{{Cdolar}}</td>
+    </tr>
+    <tr>
+      <td>Euro:</td><td>{{euro}}</td><td>{{Ceuro}}</td>
+    </tr>
+    <tr>
+      <td>Bitcoin:</td><td>{{bitcoin}}</td><td>{{Cbitcoin}}</td>
+    </tr>
+    <tr>
+      <td>Peso Argentino:</td><td>{{ars}}</td><td>{{Cpeso_argentino}}</td>
+    </tr>
+    <tr>
+      <td>Libra esterlina</td><td>{{gbp}}</td><td>{{Clibra_esterlina}}</td>
+    </tr>
+  </table>
+</div><!--Linha-->
+</div><!--App-->
+</div><!--Container-->
+   <script type="text/javascript">
+  function httpGet(theUrl){
+          var xmlHttp = new XMLHttpRequest();
+          xmlHttp.open( "GET", theUrl, false ); 
+          xmlHttp.send( null );
+        return xmlHttp.responseText;
+}
+       var jsontext = httpGet(" https://api.promasters.net.br/cotacao/v1/valores");
+       var contact = JSON.parse(jsontext);
+       var valores = contact;
+       var status = (valores.status);
+       function ultima_consulta(tempo){
+         var date = new Date(tempo*1000); // converte para data
+         var dado = date.toLocaleDateString("pt-BR"); //formata de acordo com o requisito
+         return dado;
+      }  
+    var app = new Vue({
+      el:"#app",
+      data:{
+        dolar:contact.valores.USD.valor,
+        euro:contact.valores.EUR.valor,
+        bitcoin:contact.valores.BTC.valor,
+        ars:contact.valores.ARS.valor,
+        gbp:contact.valores.GBP.valor,
+        Cdolar:ultima_consulta(contact.valores.USD.ultima_consulta),
+        Ceuro:ultima_consulta(contact.valores.EUR.ultima_consulta),
+        Cbitcoin:ultima_consulta(contact.valores.BTC.ultima_consulta),
+        Cpeso_argentino:ultima_consulta(contact.valores.ARS.ultima_consulta),
+        Clibra_esterlina:ultima_consulta(contact.valores.GBP.ultima_consulta)
+      }
+    }) 
+   </script>
+ </div>
+</body>
+</html>
